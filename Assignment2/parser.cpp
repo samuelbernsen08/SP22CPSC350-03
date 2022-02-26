@@ -14,7 +14,7 @@ Parser::Parser() {
     string user_string;
     s = user_string;
     cout << "Enter in a string: ";
-    cin >> s;
+    getline(cin, s);
 
 
     a_count = 0;
