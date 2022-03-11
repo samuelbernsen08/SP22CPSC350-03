@@ -8,8 +8,10 @@ class GameBoard
 {
     public:
         GameBoard();
+        GameBoard(GameBoard &g);
         ~GameBoard();
 
+        void InitCopyGrid(GameBoard originalBoard);
         void InitGridOfKnownSize(int numOfRows, int numOfCols);
         void InitFileGrid(int numOfRows, int numOfCols);
         void InitGridRand();
@@ -27,6 +29,7 @@ class GameBoard
         int numColumns = 0;
         
         char **someGrid;
+        //char **copyGrid;
 
         void InitNumRowsAndColumns();
 

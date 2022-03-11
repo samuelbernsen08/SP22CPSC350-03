@@ -13,6 +13,25 @@ GameBoard::GameBoard()
 {
 }
 
+GameBoard::GameBoard(GameBoard &g)
+{
+    int numRows = g.GetNumRows();
+    int numCols = g.GetNumCols();
+
+    someGrid = new char* [numRows];
+    for (int i = 0; i < numRows; i++)
+    {
+        someGrid[i] = new char[numCols];
+    }
+    for (int i = 0; i < numRows; i++)
+    {
+        for (int j = 0; j < numCols; j++)
+        {
+            cout << g.GetCharAt(i, j) << endl;
+            someGrid[i][j] = g.GetCharAt(i, j);
+        }
+    }
+}
 /**
  * ~GameBoard
  * @brief Destroy the Game Board:: Game Board object
@@ -78,6 +97,16 @@ void GameBoard::InitGridRand()
 		{
 			this->someGrid[iRow][iColumn] = '-';
 		}
+	}
+
+
+    for (int iRow = 0; iRow < this->numRows; ++iRow)
+	{
+		for (int iColumn = 0; iColumn < this->numColumns; ++iColumn)
+		{
+			cout << this->someGrid[iRow][iColumn] << " ";
+		}
+        cout << endl;
 	}
 
     // Obtains a valid input value for the initial world population density
@@ -225,6 +254,14 @@ void GameBoard::DensityPlacement(double popDensity)
             }
         }
     }
+    for (int iRow = 0; iRow < this->numRows; ++iRow)
+	{
+		for (int iColumn = 0; iColumn < this->numColumns; ++iColumn)
+		{
+			cout << this->someGrid[iRow][iColumn] << " ";
+		}
+        cout << endl;
+	}
 }
 
 /**
@@ -250,7 +287,29 @@ void GameBoard::ChangeCurrElementPos(int row, int col, char c)
  */
 char GameBoard::GetCharAt(int row, int col)
 {
+    cout << "G" << endl;
     char elem;
     elem = someGrid[row][col];
+    cout << "GE" << endl;
     return elem;
+}
+
+void GameBoard::InitCopyGrid(GameBoard originalBoard)
+{
+    int numRows = originalBoard.GetNumRows();
+    int numCols = originalBoard.GetNumCols();
+    someGrid = new char* [numRows];
+    for (int i = 0; i < numRows; i++)
+    {
+        someGrid[i] = new char[numCols];
+    }
+
+    for (int i = 0; i < numRows; i++)
+    {
+        for (int j = 0; j < numCols; j++)
+        {
+            cout << originalBoard.GetCharAt(i, j) << endl;
+            someGrid[i][j] = originalBoard.GetCharAt(i, j);
+        }
+    }
 }

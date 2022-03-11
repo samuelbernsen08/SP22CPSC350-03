@@ -15,7 +15,8 @@ using namespace std;
  * 
  */
 Game::Game()
-{}
+{
+}
 
 /**
  * ~Game
@@ -33,7 +34,8 @@ Game::~Game()
 void Game::InitGridRand()
 {
     gameGrid.InitGridRand();
-    copyGrid = gameGrid;
+    //copyGrid.InitCopyGrid(gameGrid);
+    copyGrid = GameBoard(gameGrid);
 }
 
 /**
@@ -69,10 +71,10 @@ void Game::Play()
         fileHandler.LoadMapFile(userWorldChoice, gameGrid);
         copyGrid = gameGrid;
     }
-
+    cout << "I'm here" << endl;
     int emergencyBreakOut = 0;
     // Actual game loop beginning. Continues looping until game over
-    while (!HasStagnated() || !AllDead()) // Checks game rules/end conditions
+    while (HasStagnated() || !AllDead()) // Checks game rules/end conditions
     {
         // Displays the current generation
         cout << "Gen ";
@@ -209,6 +211,7 @@ bool Game::AllDead()
     int totalNumLocations = (gameGrid.GetNumRows() * gameGrid.GetNumCols());
 
     // Checks if all locations are empty
+    cout << "In all Dead" << endl;
     for (int iRow = 0; iRow < gameGrid.GetNumRows(); ++iRow)
     {
         for (int iColumn = 0; iColumn < gameGrid.GetNumCols(); ++iColumn)
@@ -228,6 +231,7 @@ bool Game::AllDead()
     {
         allDead = false;
     }
+    cout << "End of all dead" << endl;
 
     return allDead;
 }
@@ -243,23 +247,28 @@ bool Game::AllDead()
  */
 bool Game::HasStagnated()
 {
+    cout << "Has Stagnated Start" << endl;
     bool hasStagnated = false;
     int numSameLocations = 0;
-    int totalNumLocations = (gameGrid.GetNumRows() * gameGrid.GetNumCols());
+    int totalNumLocations = ((gameGrid.GetNumRows()) * (gameGrid.GetNumCols()));
 
     // Checks if all locations of previous grid are same as those of current grid
     for (int iRow = 0; iRow < gameGrid.GetNumRows(); ++iRow)
     {
         for (int iColumn = 0; iColumn < gameGrid.GetNumCols(); ++iColumn)
         {
-            if (gameGrid.GetCharAt(iRow, iColumn) == (copyGrid.GetCharAt(iRow, iColumn))) 
+            cout << "copygrid at locations" << copyGrid.GetCharAt(iRow,iColumn) << endl;
+            if ((gameGrid.GetCharAt(iRow, iColumn)) == (copyGrid.GetCharAt(iRow, iColumn))) 
             {
                 ++numSameLocations;
+                cout << "num" << numSameLocations << endl;
             }
         }
+        cout << "Number of same locations: " << numSameLocations << endl;
     }
 
     hasStagnated = (numSameLocations == totalNumLocations);
+    cout << "Has Stagnated After" << endl;
 
     return hasStagnated;
 }
