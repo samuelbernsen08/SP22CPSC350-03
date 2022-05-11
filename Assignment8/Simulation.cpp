@@ -1,16 +1,39 @@
+/**
+ * @file Simulation.cpp
+ * @author Samuel Bernsen
+ * @brief Contains the implementations of all the method definitions from the Simulation header file.
+ * Runs through a single simulation of sorting algorithms
+ * @version 0.1
+ * @date 2022-05-11
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
+
 #include "Simulation.h"
 #include <iostream>
 
+/* 
+ @brief constructor for simulation class
+ */
 Simulation::Simulation()
 {
 
 }
 
+/* 
+@brief destructor for simulation class
+ */
 Simulation::~Simulation()
 {
 
 }
 
+/* 
+@brief simulate one run of the program, running each of the sorting algorithms back-to-back
+@param filename
+ */
 void Simulation::Simulate(string fileName)
 {
 
@@ -24,10 +47,13 @@ void Simulation::Simulate(string fileName)
 
     double* MS_array;
 
+    double* ShellSort_array;
+
     int numValues = fh->NumLines();
 
     SS_array = new double[numValues];
     MS_array = new double[numValues];
+    ShellSort_array = new double[numValues];
 
     fh->CloseInFile();
 
@@ -46,10 +72,20 @@ void Simulation::Simulate(string fileName)
         value = stod(line);
         SS_array[i] = value;
         MS_array[i] = value;
+        ShellSort_array[i] = value;
         //cout << SS_array[i] << endl;
     }
+
+    int userGap = PromptForGapVal();
+
+    for (int i = 0; i < 3; i++) // for readability purposes
+    {
+       cout << endl;
+    }
+
     PerformSS(SS_array, numValues);
     PerformMS(MS_array, numValues);
+    PerformShellSort(ShellSort_array, numValues, userGap);
 
 
     delete[] SS_array;
@@ -58,7 +94,10 @@ void Simulation::Simulate(string fileName)
     f->CloseInFile();
 }
 
-
+/* 
+@brief Outputs the time taken for the Selection Sort algorithm
+@param double* array, int numVals
+ */
 void Simulation::PerformSS(double* array, int numVals)
 {
     cout << "Selection Sort starting..." << endl;
@@ -74,6 +113,10 @@ void Simulation::PerformSS(double* array, int numVals)
 
 }
 
+/* 
+@brief Outputs the time taken for the Merge Sort algorithm
+@param double* array, int numVals
+ */
 void Simulation::PerformMS(double* array, int numVals)
 {
    cout << "Merge Sort starting..." << endl;
@@ -87,7 +130,30 @@ void Simulation::PerformMS(double* array, int numVals)
    cout << endl;
 }
 
+/*
+@brief Outputs the time taken for the Shell Sort algorithm
+@param double* array, int numVals, int gapVal
+*/
+void Simulation::PerformShellSort(double* array, int numVals, int gapVal)
+{
+   cout << "Shell Sort starting..." << endl;
+   auto begin = std::chrono::steady_clock::now();
+   cout << "Sorting began at: " << std::chrono::duration_cast<std::chrono::microseconds>(begin.time_since_epoch()).count() << endl;
+   for (int i = 0; i < gapVal; i++) 
+   {
+   InsertionSortInterleaved(array, numVals, i, gapVal);
+   }
+   auto end = std::chrono::steady_clock::now();
+   cout << "Ended at: " << std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()).count() << endl;
+   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+   cout << "Duration: " << duration.count() << " microsecond(s)" << endl;
+   cout << endl;
+}
 
+/* 
+@brief Performs the Selection Sort algorithm
+@param double* array, int numbersSize
+ */
 void Simulation::SelectionSort(double *array, int numbersSize)
 {
    int i = 0;
@@ -113,7 +179,10 @@ void Simulation::SelectionSort(double *array, int numbersSize)
    }
 }
 
-
+/* 
+@brief Merges two halves of an array
+@param double* array, int i, int j, int k
+ */
 void Simulation::Merge(double* numbers, int i, int j, int k) {
    int mergedSize = k - i + 1;               // Size of merged partition
    int mergePos = 0;                       // Position to insert merged number
@@ -159,6 +228,10 @@ void Simulation::Merge(double* numbers, int i, int j, int k) {
    }
 }
 
+/* 
+@brief Performs the Merge Sort algorithm
+@param double* array, int i, int k
+ */
 void Simulation::MergeSort(double* numbers, int i, int k) {
    int j = 0;
    
@@ -172,4 +245,39 @@ void Simulation::MergeSort(double* numbers, int i, int k) {
       // Merge left and right partition in sorted order
       Merge(numbers, i, j, k);
    }
+}
+
+/* 
+@brief Performs the Insertion Sort algorithm used in Shell Sort
+@param double* array, int numVals, int startIndex, int gapVal
+ */
+void Simulation::InsertionSortInterleaved(double* array, int numVals, int startIndex, int gapVal)
+{
+   int i = 0;
+   int j = 0;
+   int temp = 0;  // Temporary variable for swap
+
+   for (i = startIndex + gapVal; i < numVals; i = i + gapVal) {
+      j = i;
+      while (j - gapVal >= startIndex && array[j] < array[j - gapVal]) {
+         temp = array[j];
+         array[j] = array[j - gapVal];
+         array[j - gapVal] = temp;
+         j = j - gapVal;
+      }
+   }
+}
+
+
+/* 
+@brief Prompts the user for a gap value to be used in the shell sort algorithm
+@return int
+ */
+int Simulation::PromptForGapVal()
+{
+   // need to prompt for the gap value
+   int userGap = 0;
+   cout << "What gap value would you like for shell sort? ";
+   cin >> userGap;
+   userGap = (userGap % 5) + 1; // ensures the value is small (1-6)
 }
