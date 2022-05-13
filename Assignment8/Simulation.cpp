@@ -60,7 +60,7 @@ void Simulation::Simulate(string fileName)
     FileHandler* f = new FileHandler();
     f->OpenInFile(fileName);
 
-    string bigBabyMan = f->ReadLine();
+    string firstLine = f->ReadLine(); // only here to start reading from line 2 onward for the double values
 
     double value = 0.0;
 
@@ -277,7 +277,13 @@ int Simulation::PromptForGapVal()
 {
    // need to prompt for the gap value
    int userGap = 0;
-   cout << "What gap value would you like for shell sort? ";
+   while (userGap <= 0) // gap value of 0 takes 0 time to complete. negative values unacceptable
+   {
+   cout << endl << "What gap value would you like for shell sort? (must not be less than 1): ";
    cin >> userGap;
-   userGap = (userGap % 5) + 1; // ensures the value is small (1-6)
+   if (userGap <= 0)
+   {
+      cout << "Invalid gap value" << endl;
+   }
+   }
 }

@@ -82,6 +82,12 @@ string FileHandler::ReadFile()
     return str;
 }
 
+/**
+ * NumLines
+ * @brief Calculates the number of lines in a file
+ * 
+ * @return int
+ */
 int FileHandler::NumLines()
 {
     int numLines = 0;
